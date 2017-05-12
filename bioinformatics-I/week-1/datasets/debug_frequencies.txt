@@ -1,0 +1,5 @@
+Input:
+ACGCGGCTCTGAAA
+2
+Output:
+http://bioinformaticsalgorithms.com/data/debugdatasets/replication/FrequencyArray.pdf

@@ -87,6 +87,13 @@ def ComputingFrequencies(Text, k):
         FrequencyArray[j] += 1
     return FrequencyArray
 
+def FasterFrequentWords(Text, k):
+    """
+    Find frequent words using a frequency array. This algorithm is faster for
+    smaller values of k.
+    """
+    pass
+
 def FrequentWords(Text, k):
     """
     Take every k-mer from a text, and count the number of its occurences in the
@@ -103,12 +110,107 @@ def FrequentWords(Text, k):
     FrequentPatternsWithoutDuplicates = RemoveDuplicates(FrequentPatterns)
     return FrequentPatternsWithoutDuplicates
 
+def FrequentWordsWithDuplicates(Text, k):
+    FrequentPatterns = []
+    Count = CountDict(Text, k)
+    maxCount = max(Count.values())
+    for i in Count:
+        if Count[i] == maxCount:
+            FrequentPatterns.append(Text[i:i+k])
+    return FrequentPatterns
+
+# Problem: Find a reverse complement of a DNA string
+# Input: A DNA string named 'Pattern'
+# Output: 'Pattern_rc' i.e. the reverse complement of 'Pattern'
+def ReverseStrand(Pattern):
+    return Pattern[::-1]
+
+def ReverseComplement(Pattern):
+    return ReverseStrand(Pattern).replace('A', 't').replace('T', 'a').replace('G', 'c').replace('C', 'g').upper()
+
+# Problem: Find all occurences of a pattern in a string
+# Input: Strings Pattern and Genome
+# Output: All starting positions in Genome Where Pattern appears as a substring
+def PatternMatching(Pattern, Genome):
+    k = len(Pattern)
+    n = len(Genome)
+    position = []
+    for i in range(n-k+1):
+        if Genome[i:i+k] == Pattern:
+            position.append(i)
+    return position
+
+"""
+The following function does not search for a specific clump of a pattern, but
+rather all patterns that form clumps in genome. It is hope that one of those
+clumps will reveal the location of 'ori'.
+Question: Wich of these clumps would reveal 'ori'? Or, will *any* of these
+          clumps reveal 'ori'?
+Answer: We don't know.
+Remark: We know that DnaA boxes are usually 9 nucleoties long.
+Following Q and A are from the course Authors:
+Question: How does DnaA know which DnaA box to bind to?
+Answer: DnaA does not necessarily bind to just one DnaA box. In fact, it may
+        bind to all of them.
+
+A k-mer clump is a called such if it appears many times within a short interval
+of genome. A k-mer 'Pattern' forms an (L,t)-clump inside a 'Genome' if there is
+an interval of 'Genome' of length 'L' in which k-mer appears at least 't' times.
+
+Remark: It can be solved in several ways, by using:
+        - FrequentWords
+        - FasterFrequentWords i.e. using frequency array
+        - i.e. finding frequent words by sorting
+"""
+# Problem: Find patterns forming clumps in a string
+# Input: A string Genome, and integers k, L, and t
+# Output: All distinct k-mers forming (L,t)-clumps in Genome
+def Clump(Genome, k, L, t):
+    clump = []
+    for i in range(len(Genome) - L + 1):
+        clumpCandidates = FrequentWordsWithDuplicates(Genome[i:i+L], k)
+        # ispitaj mi ovaj clump
+        # napravi mi recnik svih k-mera koje sam dobio
+        potentialClumps = {}
+        for pattern in RemoveDuplicates(clumpCandidates):
+            potentialClumps[pattern] = 0
+        # prebroj im njihovu ucestanost
+        for pattern in clumpCandidates:
+            potentialClumps[pattern] += 1
+        # ispitaj da li je neki od njih najmanje t puta tu, i zapamti
+        for pattern in potentialClumps:
+            if potentialClumps[pattern] >= t:
+                clump.append(pattern)
+    return RemoveDuplicates(clump)
+
+    # pogledaj prozor i:i+L
+    # pronadji u njemu sve najcesce k-mere
+    # pogledaj da li se neki od njih sadrzi vise ili jednako od 't' puta
+    # ako se nalazi, zapamti ga
+    # ponovi proces
+
 # --- Program testing --- #
 import sys
-#lines = sys.stdin.read().splitlines()
+lines = sys.stdin.read().splitlines()
 
-#with open('./outputs/' + sys.argv[1], 'w') as f:
+with open('./outputs/' + sys.argv[1], 'w') as f:
     # --- PatternCount --- #
     #f.write(str(PatternCount(lines[0], lines[1])) + '\n')
+
     # --- FrequentWords --- #
-#    f.write(' '.join(FrequentWords(lines[0], int(lines[1]))) + '\n')
+    #f.write(' '.join(FrequentWords(lines[0], int(lines[1]))) + '\n')
+
+    # --- ComputingFrequencies --- #
+    #listOfFrequencies = ComputingFrequencies(lines[0], int(lines[1])).values()
+    #f.write(' '.join([str(num) for num in listOfFrequencies]) + '\n')
+
+    # --- ReverseComplement --- #
+    #f.write(ReverseComplement(lines[0]) + '\n')
+
+    # --- Pattern Matching --- #
+    #listOfIndices = PatternMatching(lines[0], lines[1])
+    #f.write(' '.join([str(num) for num in listOfIndices]) + '\n')
+
+    # --- Clump Finding Problem --- #
+    k, L, t = [int(num) for num in lines[1].split()]
+    f.write(' '.join(Clump(lines[0], k, L, t)) + '\n')
