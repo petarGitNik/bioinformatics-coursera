@@ -266,7 +266,7 @@ def ComputingFrequenciesWithMismatches(Text, k, d):
     for i in range(len(Text)-k+1):
         Pattern = Text[i:i+k]
         Neighborhood = Neighbor(Pattern, d)
-        for ApproximatePattern in Neighborhood
+        for ApproximatePattern in Neighborhood:
             FrequencyArray[j] += 1
     return FrequencyArray
 
@@ -330,62 +330,3 @@ def FirstSymbol(Pattern):
 
 def Suffix(Pattern):
     return Pattern[1:]
-
-# --- Program testing --- #
-import sys
-lines = sys.stdin.read().splitlines()
-
-with open('./outputs/' + sys.argv[1], 'w') as f:
-    # --- PatternCount --- #
-    #f.write(str(PatternCount(lines[0], lines[1])) + '\n')
-
-    # --- FrequentWords --- #
-    #f.write(' '.join(FrequentWords(lines[0], int(lines[1]))) + '\n')
-
-    # --- ComputingFrequencies --- #
-    #listOfFrequencies = ComputingFrequencies(lines[0], int(lines[1])).values()
-    #f.write(' '.join([str(num) for num in listOfFrequencies]) + '\n')
-
-    # --- ReverseComplement --- #
-    #f.write(ReverseComplement(lines[0]) + '\n')
-
-    # --- Pattern Matching --- #
-    #listOfIndices = PatternMatching(lines[0], lines[1])
-    #f.write(' '.join([str(num) for num in listOfIndices]) + '\n')
-
-    # --- Clump Finding Problem --- #
-    #k, L, t = [int(num) for num in lines[1].split()]
-    #f.write(' '.join(Clump(lines[0], k, L, t)) + '\n')
-
-    # --- Skew --- #
-    #f.write(' '.join([str(num) for num in Skew(lines[0]).values()]) + '\n')
-
-    # --- Skew Min Positions --- #
-    #f.write(' '.join([str(num) for num in MinSkew(lines[0])]) + '\n')
-
-    # --- HammingDistance --- #
-    #f.write(str(HammingDistance(lines[0], lines[1])) + '\n')
-
-    # --- ApproximatePatternMatching --- #
-    #f.write(' '.join([str(num) for num in ApproximatePatternMatching(
-    #    lines[0], lines[1], int(lines[2])
-    #)]) + '\n')
-
-    # --- CountWithMismatches --- #
-    #f.write(str(CountWithMismatches(
-    #    lines[0], lines[1], int(lines[2])
-    #)) + '\n')
-
-    # --- ImmediateNeighbors --- #
-    #f.write(' '.join(ImmediateNeighbors(lines[0])) + '\n')
-
-    # --- Neighbors --- #
-    # ./replication.py immediate_test < datasets/acg.txt
-    #f.write('\n'.join(Neighbors(lines[0], int(lines[1]))) + '\n')
-
-    # --- IterativeNeighbors --- #
-    #f.write('\n'.join(IterativeNeighbors(lines[0], int(lines[1]))) + '\n')
-
-    # --- ComputingFrequenciesWithMismatches --- #
-    listOfFrequencies = ComputingFrequenciesWithMismatches(lines[0], int(lines[1]), int(lines[2])).values()
-    f.write(' '.join([str(num) for num in listOfFrequencies]) + '\n')
